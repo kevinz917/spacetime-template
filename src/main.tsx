@@ -6,7 +6,7 @@ import { SpacetimeDBProvider } from "spacetimedb/react";
 import { DbConnection, ErrorContext } from "./module_bindings/index.ts";
 
 const HOST = "https://maincloud.spacetimedb.com";
-const DB_NAME = "spacetime-server";
+const DB_NAME = "spacetime-server-20260208113354";
 
 const onConnect = (_conn: DbConnection, identity: Identity, token: string) => {
   localStorage.setItem("auth_token", token);

@@ -473,17 +473,38 @@ src/main.tsx         → Provider, connection setup
 src/App.tsx          → UI components
 ```
 
-Editing rules
+Server publishing flow
 
-After each edit, run
-
-When you are done editing the server code and is ready to work on the frontend, you must publish the module, so the frontend can connect to it and work on it:
-
--
+After each complete edit cycle, you must first generate bindings for the frontend:
 
 ```
+npm run spacetime:generate
+```
 
----
+Next, When you are done editing the server code and is ready to work on the frontend, you must publish the module, so the frontend can connect to it and work on it:
+
+```
+npm run spacetime:publish
+```
+
+The result will be like the following:
+
+➜ spacetime-template git:(main) ✗ npm run spacetime:publish
+
+> spacetime-template@0.0.1 spacetime:publish
+> spacetime publish --project-path ./spacetimedb --yes spacetime-server-$(date +%Y%m%d%H%M%S)
+
+Build finished successfully.
+You are about to publish to a non-local server: maincloud.spacetimedb.com
+Skipping confirmation due to --yes
+Uploading to maincloud => https://maincloud.spacetimedb.com
+Checking for breaking changes...
+Publishing module...
+JavaScript / TypeScript support is currently in BETA.
+There may be bugs. Please file issues if you encounter any.
+<https://github.com/clockworklabs/SpacetimeDB/issues/new>
+Created new database with name: spacetime-server-20260208112406, identity: c200812f52a39ccf1ef1b4d2c883809de86ee722a33ccc88e46ca95d93b0f0b6
+➜ spacetime-template git:(main) ✗
 
 ## 12) Hard Requirements
 
@@ -492,6 +513,3 @@ When you are done editing the server code and is ready to work on the frontend, 
 3. **Reducers must be deterministic** — no filesystem, network, timers, random
 4. **Reducer calls use object syntax** — `{ param: 'value' }` not positional args
 5. **Import `DbConnection` from `./module_bindings`** — not from `spacetimedb`
-
-= When
-```

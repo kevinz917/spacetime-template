@@ -1,7 +1,13 @@
 import { schema, table, t } from "spacetimedb/server";
-import { tables } from "./schema";
 
-export const spacetimedb = tables;
+export const spacetimedb = schema(
+  table(
+    { name: "person", public: true },
+    {
+      name: t.string(),
+    }
+  )
+);
 
 spacetimedb.init((_ctx) => {
   // Called when the module is initially published
@@ -17,6 +23,8 @@ spacetimedb.clientDisconnected((_ctx) => {
 
 spacetimedb.reducer("add", { name: t.string() }, (ctx, { name }) => {
   ctx.db.person.insert({ name });
+
+  const hello = 1;
 });
 
 spacetimedb.reducer("say_hello", (ctx) => {
