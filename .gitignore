@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# SpacetimeDB
+spacetimedb/dist/
+
+# Generated bindings (regenerate with: npm run spacetime:generate)
+src/module_bindings/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Editor / IDE
+.vscode/
+!.vscode/extensions.json
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Lock files (keep only one package manager's lock)
+# Uncomment the ones you don't use:
+# package-lock.json
+# pnpm-lock.yaml
+# yarn.lock
