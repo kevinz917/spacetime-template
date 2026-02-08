@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { tables, reducers } from './module_bindings';
-import { useSpacetimeDB, useTable, useReducer } from 'spacetimedb/react';
+import { useState } from "react";
+import { tables, reducers } from "./module_bindings";
+import { useSpacetimeDB, useTable, useReducer } from "spacetimedb/react";
 
 function App() {
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
 
   const conn = useSpacetimeDB();
   const { isActive: connected } = conn;
@@ -19,34 +19,20 @@ function App() {
 
     // Call the add reducer
     addReducer({ name: name });
-    setName('');
+    setName("");
   };
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div style={{ padding: "2rem" }}>
       <h1>SpacetimeDB React App</h1>
 
-      <div style={{ marginBottom: '1rem' }}>
-        Status:{' '}
-        <strong style={{ color: connected ? 'green' : 'red' }}>
-          {connected ? 'Connected' : 'Disconnected'}
-        </strong>
+      <div style={{ marginBottom: "1rem" }}>
+        Status: <strong style={{ color: connected ? "green" : "red" }}>{connected ? "Connected" : "Disconnected"}</strong>
       </div>
 
-      <form onSubmit={addPerson} style={{ marginBottom: '2rem' }}>
-        <input
-          type="text"
-          placeholder="Enter name"
-          value={name}
-          onChange={e => setName(e.target.value)}
-          style={{ padding: '0.5rem', marginRight: '0.5rem' }}
-          disabled={!connected}
-        />
-        <button
-          type="submit"
-          style={{ padding: '0.5rem 1rem' }}
-          disabled={!connected}
-        >
+      <form onSubmit={addPerson} style={{ marginBottom: "2rem" }}>
+        <input type="text" placeholder="Enter name" value={name} onChange={(e) => setName(e.target.value)} style={{ padding: "0.5rem", marginRight: "0.5rem" }} disabled={!connected} />
+        <button type="submit" style={{ padding: "0.5rem 1rem" }} disabled={!connected}>
           Add Person
         </button>
       </form>
