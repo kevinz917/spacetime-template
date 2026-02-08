@@ -55,7 +55,7 @@ const [items, isLoading] = useTable(tables.item);
 
 ---
 
-## 1) Common Mistakes Table
+## Common Mistakes Table
 
 ### Server-side errors
 
@@ -90,7 +90,7 @@ const [items, isLoading] = useTable(tables.item);
 
 ---
 
-## 2) Table Definition (CRITICAL)
+## Table Definition (CRITICAL)
 
 **`table()` takes TWO arguments: `table(OPTIONS, COLUMNS)`**
 
@@ -166,7 +166,7 @@ export const spacetimedb = schema(Table1, Table2, Table3);
 
 ---
 
-## 3) Index Access
+## Index Access
 
 ### Naming convention
 
@@ -201,7 +201,7 @@ for (const row of ctx.db.scores.by_player.filter(playerId)) {
 
 ---
 
-## 4) Reducers
+## Reducers
 
 ### Definition syntax
 
@@ -253,7 +253,7 @@ conn.reducers.doSomething({ param: "value" });
 
 ---
 
-## 5) Scheduled Tables
+## Scheduled Tables
 
 ```typescript
 // Scheduled table MUST use scheduledId and scheduledAt columns
@@ -290,7 +290,7 @@ ctx.db.cleanupJob.scheduledId.delete(jobId);
 
 ---
 
-## 6) Timestamps
+## Timestamps
 
 ### Server-side
 
@@ -328,7 +328,7 @@ if (scheduleAt.tag === "Time") {
 
 ---
 
-## 7) Data Visibility
+## Data Visibility
 
 **`public: true` exposes ALL rows to ALL clients.**
 
@@ -388,7 +388,7 @@ conn.subscriptionBuilder().subscribe([
 
 ---
 
-## 8) React Integration
+## React Integration
 
 ### Connection setup
 
@@ -447,7 +447,7 @@ const isOwner = row.ownerId.toHexString() === myIdentity.toHexString();
 
 ---
 
-## 9) Project Structure
+## Project Structure
 
 ### Server (`backend/spacetimedb/`)
 
@@ -506,10 +506,27 @@ There may be bugs. Please file issues if you encounter any.
 Created new database with name: spacetime-server-20260208112406, identity: c200812f52a39ccf1ef1b4d2c883809de86ee722a33ccc88e46ca95d93b0f0b6
 ➜ spacetime-template git:(main) ✗
 
-## 12) Hard Requirements
+## Hard Requirements
 
 1. **DO NOT edit generated bindings** — regenerate with `spacetime generate`
 2. **Reducers are transactional** — they do not return data
 3. **Reducers must be deterministic** — no filesystem, network, timers, random
 4. **Reducer calls use object syntax** — `{ param: 'value' }` not positional args
 5. **Import `DbConnection` from `./module_bindings`** — not from `spacetimedb`
+
+## Positioning and Projectile Patterns
+
+### Server-side
+
+- **Position**: Store `x: t.f64(), y: t.f64()` on entity tables. Client sends absolute position via reducer; server writes it.
+- **Projectiles**: Separate table with `x, y, dirX, dirY`. `shoot` reducer normalizes direction and spawns at `player.pos + dir * RADIUS`. Movement handled in game tick.
+- **Game tick**: Scheduled table (`GameLoop`) fires every 50ms. Tick advances bullets (`x += dirX * SPEED * DT`), checks circle collisions (`dx*dx + dy*dy < R*R`), deletes/respawns on hit, then self-reschedules.
+- **Deterministic RNG**: Integer LCG from `ctx.timestamp + salt`. No `Math.random()`.
+
+### Client-side
+
+- **Local player (client-side prediction)**: Position in a `useRef`, updated each frame from input. Synced to server every 50ms. Always render from local ref, never from server state.
+- **Remote entities (lerp interpolation)**: Display positions in a `Map` ref. Each frame: `dp.x += (serverX - dp.x) * LERP_FACTOR`. Snap on large jumps or death.
+- **Bullets (predict + correct)**: Each frame predict forward `bd.x += dirX * SPEED * dt`, then nudge toward server pos `bd.x += (serverX - bd.x) * 0.15`. Prune stale entries.
+- **Shooting**: Convert mouse screen coords to world via camera offset, normalize direction, call `shoot({ dirX, dirY })`.
+- **Render loop**: `requestAnimationFrame` inside `useCallback`. `useTable` data stored in refs to avoid re-renders. Camera follows local player.
