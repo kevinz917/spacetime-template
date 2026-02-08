@@ -468,19 +468,18 @@ index.ts  → imports spacetimedb from ./schema, defines reducers
 ### Client (`client/`)
 
 ```
-src/module_bindings/ → Generated (spacetime generate)
+src/module_bindings/ → Generated, do not edit manually, but reference for frontend actions.
 src/main.tsx         → Provider, connection setup
 src/App.tsx          → UI components
-src/config.ts        → MODULE_NAME, SPACETIMEDB_URI
 ```
 
-- SpacetimeDB is running in dev mode, which means that as server files change, the module will be automatically published to main cloud, and the bindings to frontend will be automatically generated. You do not need to generate them manually, nor use any start / stop commands.
+Editing rules
 
-## 11) Commands
+After each edit, run
 
-# View logs
+When you are done editing the server code and is ready to work on the frontend, you must publish the module, so the frontend can connect to it and work on it:
 
-spacetime logs <module-name>
+-
 
 ```
 
