@@ -6,7 +6,7 @@ import { SpacetimeDBProvider } from "spacetimedb/react";
 import { DbConnection, ErrorContext } from "./module_bindings/index.ts";
 
 const HOST = "https://maincloud.spacetimedb.com";
-const DB_NAME = "";
+const DB_NAME = "spacetime-server-20260211170715";
 
 declare global {
   interface Window {
