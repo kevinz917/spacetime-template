@@ -2,6 +2,8 @@ import { useEffect, useRef } from "react";
 import { tables } from "./module_bindings";
 import { useTable } from "spacetimedb/react";
 import PhaserGame from "./game/PhaserGame";
+import Chat from "./components/Chat";
+import LoginScreen from "./components/LoginScreen";
 
 function App() {
   const [players] = useTable(tables.player);
@@ -10,6 +12,11 @@ function App() {
   useEffect(() => {
     playersRef.current = players;
   }, [players]);
+
+  const myPlayer = players.find(
+    (p) => window.__my_identity && p.identity.isEqual(window.__my_identity)
+  );
+  const hasUsername = !!myPlayer?.username;
 
   return (
     <>
@@ -34,6 +41,8 @@ function App() {
       >
         {players.length} player{players.length !== 1 ? "s" : ""} online
       </div>
+      <Chat />
+      {!hasUsername && <LoginScreen />}
     </>
   );
 }

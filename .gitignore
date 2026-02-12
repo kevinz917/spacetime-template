@@ -16,6 +16,7 @@ src/module_bindings/
 .env.*.local
 
 # Editor / IDE
+.claude/
 .vscode/
 !.vscode/extensions.json
 *.swp

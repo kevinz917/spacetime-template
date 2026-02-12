@@ -6,7 +6,7 @@ import { SpacetimeDBProvider } from "spacetimedb/react";
 import { DbConnection, ErrorContext } from "./module_bindings/index.ts";
 
 const HOST = "https://maincloud.spacetimedb.com";
-const DB_NAME = "spacetime-server-20260211170715";
+const DB_NAME = "spacetime-server-20260212130454";
 
 declare global {
   interface Window {
@@ -23,7 +23,7 @@ const onConnect = (conn: DbConnection, identity: Identity, token: string) => {
   window.__my_identity = identity;
   console.log("Connected with identity:", identity.toHexString());
 
-  conn.subscriptionBuilder().subscribe(["SELECT * FROM player"]);
+  conn.subscriptionBuilder().subscribe(["SELECT * FROM player", "SELECT * FROM message"]);
 };
 
 const onDisconnect = () => {

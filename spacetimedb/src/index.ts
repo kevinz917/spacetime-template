@@ -12,7 +12,18 @@ const Player = table(
   }
 );
 
-export const spacetimedb = schema(Player);
+const Message = table(
+  { name: "message", public: true },
+  {
+    id: t.u64().autoInc().primaryKey(),
+    sender: t.identity(),
+    username: t.string(),
+    text: t.string(),
+    timestamp: t.timestamp(),
+  }
+);
+
+export const spacetimedb = schema(Player, Message);
 
 // --- Lifecycle ---
 
@@ -56,5 +67,23 @@ spacetimedb.reducer(
     const player = ctx.db.player.identity.find(ctx.sender);
     if (!player) return;
     ctx.db.player.identity.update({ ...player, x, y });
+  }
+);
+
+spacetimedb.reducer(
+  "send_message",
+  { text: t.string() },
+  (ctx, { text }) => {
+    const player = ctx.db.player.identity.find(ctx.sender);
+    if (!player) return;
+    const trimmed = text.slice(0, 256).trim();
+    if (trimmed.length === 0) return;
+    ctx.db.message.insert({
+      id: 0n,
+      sender: ctx.sender,
+      username: player.username || "Anonymous",
+      text: trimmed,
+      timestamp: ctx.timestamp,
+    });
   }
 );
